@@ -56,7 +56,7 @@ services:
       - ./src:/var/www
       - node-modules:/var/www/node_modules
     environment:
-      VITE_HMR_HOST: ${LAN_HOST_IP:-192.168.1.18}
+      VITE_HMR_HOST: ${LAN_HOST_IP:-localhost}
       VITE_HMR_PORT: 5173
       VITE_HMR_PROTOCOL: ws
     ports:
@@ -65,7 +65,8 @@ services:
       - UtpIntegrador-network
     profiles:
       - dev
-    command: sh -c "cd /var/www && npm run dev -- --host 0.0.0.0 --port 5173"
+    # Run Vite directly so Docker stop signals also clean up public/hot.
+    command: ["node", "node_modules/vite/bin/vite.js", "--host", "0.0.0.0", "--port", "5173"]
     depends_on:
       - app
 
